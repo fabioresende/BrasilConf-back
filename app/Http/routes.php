@@ -20,7 +20,9 @@ Route::group(array('prefix' => 'api','middleware'=> 'cors'), function()
     //Route::resource('jobs', 'JobsController');
     Route::get('jobs',array('middleware'=> 'cors','uses'=> 'JobsController@jobs'));
     Route::get('usuarios','UsuarioController@buscarUsuarios');
-    Route::get('usuario/{idUsuario}','UsuarioController@buscarUsuariosId');
+    Route::get('usuario/buscar/{idUsuario}','UsuarioController@buscarUsuariosId');
+    Route::get('usuario/tipo-usuarios','UsuarioController@buscarTiposUsuario');
+    Route::post('usuario/salvar','UsuarioController@salvarUsuario');
     Route::resource('companies', 'CompaniesController');
     Route::match(['get', 'options'], 'api/jobs', 'Api\JobsController@jobs');
 });
