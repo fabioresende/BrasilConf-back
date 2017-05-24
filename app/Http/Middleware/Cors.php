@@ -24,10 +24,10 @@ class Cors
     public function handle($request, Closure $next)
     {
         return $next($request)
-            ->header('Access-Control-Allow-Origin', 'http://localhost:3000')
+            //->header('Access-Control-Allow-Origin', 'http://localhost:3000')
             // Depending of your application you can't use '*'
             // Some security CORS concerns
-            //->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'POST, OPTIONS')
             ->header('Access-Control-Allow-Credentials', 'true')
             ->header('Access-Control-Max-Age', '10000')

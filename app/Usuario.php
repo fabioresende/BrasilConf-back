@@ -10,7 +10,4 @@ class Usuario extends Model
     protected $hidden = ['senha'];
     protected $dates = ['deleted_at'];
 
-    public function tipoUsuario() {
-        return $this->hasOne('App\TipoUsuario');
-    }
 }

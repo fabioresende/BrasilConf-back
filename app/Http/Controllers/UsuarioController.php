@@ -12,6 +12,10 @@ use phpDocumentor\Reflection\Types\Resource;
 
 class UsuarioController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function buscarUsuarios() {
         $usuarios = Usuario::all();
         return response()->json($usuarios);
@@ -19,9 +23,9 @@ class UsuarioController extends Controller
 
     public function buscarUsuariosId($idUsuario) {
         $usuario = Usuario::find($idUsuario);
-        if(!$usuario){
+        if (!$usuario) {
             return response()->json([
-                'message'   => 'Usuário não encontrado',
+                'message' => 'Usuário não encontrado',
             ], 404);
         }
         return response()->json($usuario);
@@ -32,7 +36,7 @@ class UsuarioController extends Controller
         $usuario->fill($atributos->all());
         $retorno = $usuario->save();
 
-        return response()->json($usuario,201);
+        return response()->json($usuario, 201);
     }
 
     public function buscarTiposUsuario() {
@@ -40,6 +44,6 @@ class UsuarioController extends Controller
         foreach ($tiposUsuario as $tipoUsuario) {
             $descricao[] = $tipoUsuario->descricao;
         }
-        return response()->json($descricao,200);
+        return response()->json($descricao, 200);
     }
 }

@@ -25,6 +25,7 @@ Route::group(array('prefix' => 'api','middleware'=> 'cors'), function()
     Route::post('usuario/salvar','UsuarioController@salvarUsuario');
     Route::resource('companies', 'CompaniesController');
     Route::match(['get', 'options'], 'api/jobs', 'Api\JobsController@jobs');
+    Route::post('auth/login', 'AuthController@authenticate');
 });
 
 Route::get('/', function () {
