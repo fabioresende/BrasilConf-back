@@ -10,7 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::group(array('prefix' => 'api','middleware'=> 'cors'), function()
+Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), function()
 {
 
     Route::get('/', function () {
@@ -25,6 +25,8 @@ Route::group(array('prefix' => 'api','middleware'=> 'cors'), function()
     Route::post('usuario/salvar','UsuarioController@salvarUsuario');
     Route::resource('companies', 'CompaniesController');
     Route::match(['get', 'options'], 'api/jobs', 'Api\JobsController@jobs');
+});
+Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {
     Route::post('auth/login', 'AuthController@authenticate');
 });
 

@@ -7,16 +7,30 @@ use App\Usuario;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use phpDocumentor\Reflection\Types\Resource;
 
 class UsuarioController extends Controller
 {
     public function __construct() {
-        $this->middleware('auth');
     }
 
+    protected function usuarioValidator($request) {
+        $validator = Validator::make($request->all(), [
+            'usuario' => 'required|max:50',
+            'cpf' => 'required|email|unique:usuarios',
+            'nome' => 'required|max:50',
+            'telefone' => 'required|max:50',
+            'status' => 'required',
+            'id_tipo_usuario' => 'required'
+        ]);
+
+        return $validator;
+    }
     public function buscarUsuarios() {
+        //$teste = $request->getUserInfo();
+        //print_r(Auth::user()->id);die();
         $usuarios = Usuario::all();
         return response()->json($usuarios);
     }
@@ -32,6 +46,13 @@ class UsuarioController extends Controller
     }
 
     public function salvarUsuario(Request $atributos) {
+        $validator = $this->companyValidator($atributos);
+        if($validator->fails() ) {
+            return response()->json([
+                'message'   => 'Erros de validacao do usuario',
+                'erros'        => $validator->errors()
+            ], 422);
+        }
         $usuario = new Usuario();
         $usuario->fill($atributos->all());
         $retorno = $usuario->save();
