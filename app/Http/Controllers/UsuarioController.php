@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use phpDocumentor\Reflection\Types\Resource;
 
 class UsuarioController extends Controller
@@ -19,7 +20,7 @@ class UsuarioController extends Controller
     protected function usuarioValidator($request) {
         $validator = Validator::make($request->all(), [
             'usuario' => 'required|max:50',
-            'cpf' => 'required|email|unique:usuarios',
+            'cpf' => 'required|unique:usuarios',
             'nome' => 'required|max:50',
             'telefone' => 'required|max:50',
             'status' => 'required',
@@ -46,7 +47,7 @@ class UsuarioController extends Controller
     }
 
     public function salvarUsuario(Request $atributos) {
-        $validator = $this->companyValidator($atributos);
+        $validator = $this->usuarioValidator($atributos);
         if($validator->fails() ) {
             return response()->json([
                 'message'   => 'Erros de validacao do usuario',
