@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AutenticateRequest;
 use App\Usuario;
+use App\UsuarioAdministrador;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -16,13 +17,16 @@ class AuthController extends Controller {
         // Get only email and password from request
         $credenciais = $request->only('usuario', 'senha');
         // Get user by email
-        $usuario = Usuario::where('usuario', $credenciais['usuario'])->first();
+        $usuario = UsuarioAdministrador::where('usuario', $credenciais['usuario'])->first();
 
         // Validate Company
         if(!$usuario) {
-            return response()->json([
-                'error' => 'Usuário ou senha não encontrados'
-            ], 401);
+            $usuario = Usuario::where('usuario', $credenciais['usuario'])->first();
+            if ($usuario) {
+                return response()->json([
+                    'error' => 'Usuário ou senha não encontrados'
+                ], 401);
+            }
         }
         // Validate Password
         if ($credenciais['senha']!=$usuario->senha) {

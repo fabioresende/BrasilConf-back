@@ -21,6 +21,8 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::get('jobs',array('middleware'=> 'cors','uses'=> 'JobsController@jobs'));
     Route::get('usuarios','UsuarioController@buscarUsuarios');
     Route::get('usuario/buscar/{idUsuario}','UsuarioController@buscarUsuariosId');
+    Route::get('fornecedor','FornecedorController@buscarFornecedor');
+    Route::post('fornecedor/salvar','FornecedorController@salvarFornecedor');
     Route::get('usuario/tipo-usuarios','UsuarioController@buscarTiposUsuario');
     Route::post('usuario/salvar','UsuarioController@salvarUsuario');
     Route::resource('companies', 'CompaniesController');
