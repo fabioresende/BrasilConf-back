@@ -25,7 +25,7 @@ class FornecedorController extends Controller {
     
     public function buscarFornecedor() {
         $idUsuarioLogado = Auth::user()->id;
-        $fornecedor = Fornecedor::where('id_usuario_adm',$idUsuarioLogado)->get();
+        $fornecedor = Fornecedor::where('id_usuario_adm',$idUsuarioLogado)->first();
         if (!$fornecedor) {
             return response()->json([
                 'message' => 'Este usuário ainda não possui fornecedor',
