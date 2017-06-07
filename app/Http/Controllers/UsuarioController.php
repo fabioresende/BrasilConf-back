@@ -30,8 +30,6 @@ class UsuarioController extends Controller
         return $validator;
     }
     public function buscarUsuarios() {
-        //$teste = $request->getUserInfo();
-        //print_r(Auth::user()->id);die();
         $usuarios = Usuario::all();
         return response()->json($usuarios);
     }
@@ -54,11 +52,15 @@ class UsuarioController extends Controller
                 'erros'        => $validator->errors()
             ], 422);
         }
-        $usuario = new Usuario();
-        $usuario->fill($atributos->all());
-        $retorno = $usuario->save();
-
-        return response()->json($usuario, 201);
+        $usuario = Usuario::find($atributos->id);
+        if (!$usuario) {
+            $resposta = $this->salvar($atributos);
+            return response()->json($resposta, 201);
+        }
+        else {
+            $resposta = $this->atualizar($usuario,$atributos);
+            return response()->json($resposta, 202);
+        }
     }
 
     public function buscarTiposUsuario() {
@@ -67,5 +69,36 @@ class UsuarioController extends Controller
             $descricao[] = $tipoUsuario->descricao;
         }
         return response()->json($descricao, 200);
+    }
+
+    private function salvar($atributos) {
+        $usuario = new Usuario();
+        $usuario->fill($atributos->all());
+        $retorno = $usuario->save();
+        if ($retorno) {
+            $resposta['mensagem'] = "Usuário salvo com sucesso!";
+            $resposta['success'] = true;
+            return $resposta;
+        }
+        else {
+            $resposta['mensagem'] = "Erro: Não foi possível salvar usuário!";
+            $resposta['success'] = false;
+            return $resposta;
+        }
+    }
+
+    private function atualizar($usuario,$atributos) {
+        $usuario->fill($atributos->all());
+        $controle = $usuario->save();
+        if ($controle) {
+            $resposta['mensagem'] = "Usuário atualizado com sucesso!";
+            $resposta['success'] = true;
+            return $resposta;
+        }
+        else {
+            $resposta['mensagem'] = "Erro: Não foi possível atualizar usuário!";
+            $resposta['success'] = false;
+            return $resposta;
+        }
     }
 }

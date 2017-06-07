@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Fornecedor extends Model {
 
-    protected $fillable = ['id_fornecedor','nome','telefone','cnpj','logradouro','tipo_logradouro','numero','cep','cidade','estado','urlLogo','id_usuario_adm'];
+    protected $fillable = ['id_fornecedor','nome','telefone','cnpj','logradouro','tipo_logradouro','numero','cep','cidade','estado','urlLogo','id_usuario_adm','historia'];
     protected $dates = ['deleted_at'];
     
     public function usuarioAdministrador() {

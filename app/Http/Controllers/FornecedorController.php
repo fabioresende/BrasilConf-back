@@ -8,24 +8,32 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
-class FornecedorController extends Controller {
+class FornecedorController extends Controller
+{
 
-    protected function ForncedorValidator($request) {
+    protected function fornecedorValidator($request)
+    {
         $validator = Validator::make($request->all(), [
-            'usuario' => 'required|max:50',
-            'cnpj' => 'required|unique:usuarios',
             'nome' => 'required|max:50',
-            'telefone' => 'required|max:50',
-            'status' => 'required',
-            'id_tipo_usuario' => 'required'
+            'cnpj' => 'required',
+            'cep' => 'required|max:8|min:8',
+            'telefone' => 'required|max:11',
+            'tipo_logradouro' => 'required|max:7',
+            'logradouro' => 'required|max:50',
+            'numero' => 'required',
+            'url_logo' => 'required',
+            'estado' => 'required',
+            'cidade' => 'required'
         ]);
         return $validator;
     }
-    
-    public function buscarFornecedor() {
+
+    public function buscarFornecedor()
+    {
         $idUsuarioLogado = Auth::user()->id;
-        $fornecedor = Fornecedor::where('id_usuario_adm',$idUsuarioLogado)->first();
+        $fornecedor = Fornecedor::where('id_usuario_adm', $idUsuarioLogado)->first();
         if (!$fornecedor) {
             return response()->json([
                 'message' => 'Este usuário ainda não possui fornecedor',
@@ -36,18 +44,54 @@ class FornecedorController extends Controller {
 
     public function salvarFornecedor(Request $atributos) {
         $validator = $this->fornecedorValidator($atributos);
-        if($validator->fails() ) {
+        if ($validator->fails()) {
             return response()->json([
-                'message'   => 'Erros de validacao do fornecedor',
-                'erros'        => $validator->errors()
+                'message' => 'Erros de validacao do fornecedor',
+                'erros' => $validator->errors()
             ], 422);
         }
+        $fornecedor = Fornecedor::find($atributos->id);
+        if (!$fornecedor) {
+            $resposta = $this->salvar($atributos);
+            return response()->json($resposta, 201);
+        } else {
+            $resposta = $this->atualizar($fornecedor,$atributos);
+            return response()->json($resposta, 202);
+        }
+
+
+    }
+
+    private function salvar($atributos) {
         $fornecedor = new Fornecedor();
         $fornecedor->fill($atributos->all());
         $idUsuarioLogado = Auth::user()->id;
-        $fornecedor->setAttribute('id_usuario_adm',$idUsuarioLogado);
-        $retorno = $fornecedor->save();
+        $fornecedor->setAttribute('id_usuario_adm', $idUsuarioLogado);
+        $controle = $fornecedor->save();
+        if ($controle) {
+            $resposta['mensagem'] = "Fornecedor salvo com sucesso!";
+            $resposta['success'] = true;
+            return $resposta;
+        }
+        else {
+            $resposta['mensagem'] = "Erro: Não foi possível salvar fornecedor!";
+            $resposta['success'] = false;
+            return $resposta;
+        }
+    }
 
-        return response()->json($fornecedor, 201);
+    private function atualizar($fornecedor,$atributos) {
+        $fornecedor->fill($atributos->all());
+        $controle = $fornecedor->save();
+        if ($controle) {
+            $resposta['mensagem'] = "Fornecedor atualizado com sucesso!";
+            $resposta['success'] = true;
+            return $resposta;
+        }
+        else {
+            $resposta['mensagem'] = "Erro: Não foi possível atualizar fornecedor!";
+            $resposta['success'] = false;
+            return $resposta;
+        }
     }
 }
