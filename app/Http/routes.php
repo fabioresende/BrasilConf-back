@@ -26,6 +26,8 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::post('usuario/salvar','UsuarioController@salvarUsuario');
     Route::resource('companies', 'CompaniesController');
     Route::match(['get', 'options'], 'api/jobs', 'Api\JobsController@jobs');
+    Route::get('produtos','ProdutoController@buscarProdutos');
+    Route::get('produto/buscar/{idProduto}','ProdutoController@buscarProdutosid');
 });
 Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {
     Route::post('auth/login', 'AuthController@authenticate');
