@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Fornecedor;
-use App\UsuarioAdministrador;
+use App\Http\Business\FornecedorBO;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -13,6 +12,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FornecedorController extends Controller
 {
+     private $fornecedorBO;
+    /**
+     * FornecedorController constructor.
+     */
+    public function __construct()
+    {
+        $this->fornecedorBO = new FornecedorBO();
+    }
 
     protected function fornecedorValidator($request)
     {
@@ -33,13 +40,7 @@ class FornecedorController extends Controller
 
     public function buscarFornecedor()
     {
-        $usuarioLogado = JWTAuth::toUser();
-        if ($usuarioLogado->id_tipo_usuario == 1) {
-            print("entrou aqui");
-            $fornecedor = Fornecedor::where('id_usuario_adm', $usuarioLogado->id)->first();
-        } else {
-            $fornecedor = Fornecedor::where('id_usuario_adm', $usuarioLogado->id_usuarioadm)->first();
-        }
+        $fornecedor = $this->fornecedorBO->buscarForncedor();
         if (!$fornecedor) {
             return response()->json([
                 'message' => 'Este usuário ainda não possui fornecedor',
@@ -56,48 +57,7 @@ class FornecedorController extends Controller
                 'erros' => $validator->errors()
             ], 422);
         }
-        $fornecedor = Fornecedor::find($atributos->id);
-        if (!$fornecedor) {
-            $resposta = $this->salvar($atributos);
-            return response()->json($resposta, 201);
-        } else {
-            $resposta = $this->atualizar($fornecedor,$atributos);
-            return response()->json($resposta, 202);
-        }
-
-
-    }
-
-    private function salvar($atributos) {
-        $fornecedor = new Fornecedor();
-        $fornecedor->fill($atributos->all());
-        $idUsuarioLogado = J::user()->id;
-        $fornecedor->setAttribute('id_usuario_adm', $idUsuarioLogado);
-        $controle = $fornecedor->save();
-        if ($controle) {
-            $resposta['mensagem'] = "Fornecedor salvo com sucesso!";
-            $resposta['success'] = true;
-            return $resposta;
-        }
-        else {
-            $resposta['mensagem'] = "Erro: Não foi possível salvar fornecedor!";
-            $resposta['success'] = false;
-            return $resposta;
-        }
-    }
-
-    private function atualizar($fornecedor,$atributos) {
-        $fornecedor->fill($atributos->all());
-        $controle = $fornecedor->save();
-        if ($controle) {
-            $resposta['mensagem'] = "Fornecedor atualizado com sucesso!";
-            $resposta['success'] = true;
-            return $resposta;
-        }
-        else {
-            $resposta['mensagem'] = "Erro: Não foi possível atualizar fornecedor!";
-            $resposta['success'] = false;
-            return $resposta;
-        }
+        $resposta = $this->fornecedorBO->salvar($atributos);
+        return response()->json($resposta,200);
     }
 }

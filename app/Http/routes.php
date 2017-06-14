@@ -17,9 +17,8 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
         return response()->json(['message' => 'Jobs API', 'status' => 'Connected']);
     });
 
-    //Route::resource('jobs', 'JobsController');
-    Route::get('jobs',array('middleware'=> 'cors','uses'=> 'JobsController@jobs'));
     Route::get('usuarios','UsuarioController@buscarUsuarios');
+    Route::get('auth/usuario','AuthController@buscarUsuarioLogado');
     Route::get('usuario/buscar/{idUsuario}','UsuarioController@buscarUsuariosId');
     Route::get('fornecedor','FornecedorController@buscarFornecedor');
     Route::post('fornecedor/salvar','FornecedorController@salvarFornecedor');

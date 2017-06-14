@@ -34,7 +34,6 @@ class AuthController extends Controller
         }
         // Generate Token
         $token = JWTAuth::fromUser($usuario);
-        $token2 = JWTAuth::toUser($token);
         // Get expiration time
         $objectToken = JWTAuth::setToken($token);
         $expiration = JWTAuth::decode($objectToken->getToken())->get('exp');
@@ -48,5 +47,15 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => $expiration
         ]);
+    }
+
+    public function buscarUsuarioLogado(){
+        $usuario = JWTAuth::toUser();
+        if (!$usuario) {
+            return response()->json([
+                'error' => 'Não foi possivel encontrar o usuário logado'
+            ], 500);
+        }
+        return response()->json($usuario);
     }
 }
