@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class FornecedorController extends Controller
 {
@@ -32,8 +33,13 @@ class FornecedorController extends Controller
 
     public function buscarFornecedor()
     {
-        $idUsuarioLogado = Auth::user()->id;
-        $fornecedor = Fornecedor::where('id_usuario_adm', $idUsuarioLogado)->first();
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->id_tipo_usuario == 1) {
+            print("entrou aqui");
+            $fornecedor = Fornecedor::where('id_usuario_adm', $usuarioLogado->id)->first();
+        } else {
+            $fornecedor = Fornecedor::where('id_usuario_adm', $usuarioLogado->id_usuarioadm)->first();
+        }
         if (!$fornecedor) {
             return response()->json([
                 'message' => 'Este usuário ainda não possui fornecedor',
@@ -65,7 +71,7 @@ class FornecedorController extends Controller
     private function salvar($atributos) {
         $fornecedor = new Fornecedor();
         $fornecedor->fill($atributos->all());
-        $idUsuarioLogado = Auth::user()->id;
+        $idUsuarioLogado = J::user()->id;
         $fornecedor->setAttribute('id_usuario_adm', $idUsuarioLogado);
         $controle = $fornecedor->save();
         if ($controle) {
