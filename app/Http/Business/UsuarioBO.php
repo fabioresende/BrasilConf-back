@@ -37,8 +37,13 @@ class UsuarioBO {
 
     private function salvarUsuario($usuario,$atributos) {
         $usuario->fill($atributos->all());
-        $usuario->id_usuarioadm = JWTAuth::toUser()->id_usuarioadm;
-        $usuario->id_fornecedor = JWTAuth::toUser()->id_fornecedor;
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->tipo_empresa == 1) {
+            $usuario->id_loja = $usuarioLogado->id_loja;
+        } elseif ($usuarioLogado->tipo_empresa == 2) {
+            $usuario->id_fornecedor = $usuarioLogado->id_fornecedor;
+        }
+        $usuario->id_usuarioadm = $usuarioLogado->id_usuarioadm;
         $retorno = $usuario->save();
 
         if ($retorno) {

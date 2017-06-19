@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Business;
 
+use App\Departamento;
 use App\Usuario;
 use App\Produto;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class ProdutoBO {
         $produto = new Produto();
         $produtoEncontrado = $produto->find($atributos->id);
         if (!$produtoEncontrado) {
-            $resposta = $this->salvarProduto($prodtuo,$atributos);
+            $resposta = $this->salvarProduto($produto,$atributos);
         }
         else {
             $resposta = $this->atualizarProduto($produtoEncontrado,$atributos);
@@ -42,12 +43,12 @@ class ProdutoBO {
         $retorno = $produto->save();
 
         if ($retorno) {
-            $resposta['mensagem'] = "Usuário salvo com sucesso!";
+            $resposta['mensagem'] = "Produto salvo com sucesso!";
             $resposta['success'] = true;
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível salvar usuário!";
+            $resposta['mensagem'] = "Erro: Não foi possível salvar o produto!";
             $resposta['success'] = false;
             return $resposta;
         }
@@ -72,7 +73,7 @@ class ProdutoBO {
 
     public function buscarProduto($idProduto){
         $produto = new Produto();
-        $produtoEncontrado = $produto->find($idProduto);
+        $produtoEncontrado = $produto::with(["departamento","fornecedor"])->find($idProduto);
 
         if (!$produtoEncontrado) {
             $resposta['mensagem'] = "Usuário não encontrado!";
@@ -85,8 +86,20 @@ class ProdutoBO {
     }
 
     public function buscarTodosProdutos() {
-        $idFornecedor = JWTAuth::toUser();
-        $produtosVinculados = Produto::where('id_fornecedor',$idFornecedor)->get();
-        return $produtosVinculados;
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->tipo_empresa == 1) {
+            $idFornecedor = $usuarioLogado->id_fornecedor;
+            $produtosVinculados = Produto::with("departamento")->where('id_fornecedor',$idFornecedor)->get();
+            return $produtosVinculados;
+        } else {
+            $idLoja = $usuarioLogado->id_loja;
+            $produtosVinculados = Produto::with("departamento")->where('id_loja',$idLoja)->get();
+            return $produtosVinculados;
+        }
+    }
+
+    public function buscarDepartamentos() {
+        $departamentos = Departamento::all();
+        return $departamentos;
     }
 }

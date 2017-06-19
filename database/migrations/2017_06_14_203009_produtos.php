@@ -30,7 +30,7 @@ class Produtos extends Migration
             $table->double('largura');
             $table->double('altura');
             $table->string('url_foto');
-            $table->integer('id_departamento');
+            $table->integer('id_departamento')->unsigned();
             $table->integer('id_fornecedor')->unsigned();
             $table->foreign('id_fornecedor')
                 ->references('id')

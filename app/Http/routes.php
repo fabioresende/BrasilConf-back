@@ -17,17 +17,44 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
         return response()->json(['message' => 'Jobs API', 'status' => 'Connected']);
     });
 
-    Route::get('usuarios','UsuarioController@buscarUsuarios');
+    /*
+     * Rotas relacionada a autenticação
+     * */
     Route::get('auth/usuario','AuthController@buscarUsuarioLogado');
+
+
+    /*
+     * Rotas relacionada ao usuário
+     */
+    Route::get('usuarios','UsuarioController@buscarUsuarios');
     Route::get('usuario/buscar/{idUsuario}','UsuarioController@buscarUsuariosId');
-    Route::get('fornecedor','FornecedorController@buscarFornecedor');
-    Route::post('fornecedor/salvar','FornecedorController@salvarFornecedor');
     Route::get('usuario/tipo-usuarios','UsuarioController@buscarTiposUsuario');
     Route::post('usuario/salvar','UsuarioController@salvarUsuario');
-    Route::resource('companies', 'CompaniesController');
-    Route::match(['get', 'options'], 'api/jobs', 'Api\JobsController@jobs');
+
+
+    /*
+     * Rotas relacionada ao fornecedor
+     */
+    Route::get('fornecedor','FornecedorController@buscarFornecedor');
+    Route::post('fornecedor/salvar','FornecedorController@salvarFornecedor');
+
+    /*
+     * Rotas relacionada à loja
+     */
+    Route::get('loja','LojaController@buscarLoja');
+    Route::post('loja/salvar','LojaController@salvarLoja');
+    Route::get('loja/areas','LojaController@buscarTodasAreas');
+    Route::get('loja/areas-relacionadas','LojaController@buscarAreasRelacionadas');
+
+
+    /*
+     * Rotas relacionada aow produtos
+     */
     Route::get('produtos','ProdutoController@buscarProdutos');
     Route::get('produto/buscar/{idProduto}','ProdutoController@buscarProdutosid');
+    Route::post('produto/salvar','ProdutoController@salvarProduto');
+    Route::get('produto/departamentos','ProdutoController@buscarDepartamentos');
+
 });
 Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {
     Route::post('auth/login', 'AuthController@authenticate');

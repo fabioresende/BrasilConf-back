@@ -22,7 +22,6 @@ class ProdutoController extends Controller
         $validator = Validator::make($request->all(), [
             'nome' => 'required|max:50',
             'preco' => 'required',
-            'validade' => 'required',
             'fabricante' => 'required|max:50',
             'descricao' => 'required',
             'status' => 'required',
@@ -58,5 +57,10 @@ class ProdutoController extends Controller
         }
         $response = $this->produtoBO->salvar($atributos);
         return response()->json($response,200);
+    }
+
+    public function buscarDepartamentos() {
+        $response = $this->produtoBO->buscarDepartamentos();
+        return response()->json($response);
     }
 }
