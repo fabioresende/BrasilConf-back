@@ -54,6 +54,7 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::get('produto/buscar/{idProduto}','ProdutoController@buscarProdutosid');
     Route::post('produto/salvar','ProdutoController@salvarProduto');
     Route::get('produto/departamentos','ProdutoController@buscarDepartamentos');
+    Route::get('produtos/venda','ProdutoController@buscarProdutosVenda');
 
 });
 Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {

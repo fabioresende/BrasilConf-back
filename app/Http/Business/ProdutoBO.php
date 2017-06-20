@@ -102,4 +102,14 @@ class ProdutoBO {
         $departamentos = Departamento::all();
         return $departamentos;
     }
+
+    public function buscarProdutosVenda($areasRelacionadasLoja) {
+        $produtos = DB::table('produtos')
+            ->join('departamentos', 'produtos.id_departamento', '=', 'departamentos.id')
+            ->join('areas', 'departamentos.id_area', '=', 'areas.id')
+            ->whereIn('areas.id',$areasRelacionadasLoja)
+            ->select("produtos.*","departamentos.id","areas.id","areas.descricao as descricao_area","departamentos.descricao as descricao_departamento")
+            ->get();
+        return $produtos;
+    }
 }

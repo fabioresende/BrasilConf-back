@@ -18,7 +18,7 @@ class Loja extends Model {
         'cep',
         'cidade',
         'estado',
-        'url_Logo',
+        'url_logo',
         'id_usuario_adm',
         'url_site'];
     protected $dates = ['deleted_at'];

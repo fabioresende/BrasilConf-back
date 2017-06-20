@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Business\LojaBO;
 use App\Http\Business\ProdutoBO;
 use App\Http\Business\UsuarioBO;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class ProdutoController extends Controller
     public function __construct() {
         $this->produtoBO = new produtoBO();
         $this->usuarioBO = new usuarioBO();
+        $this->lojaBO = new lojaBO();
     }
 
     protected function produtoValidator($request) {
@@ -62,5 +64,12 @@ class ProdutoController extends Controller
     public function buscarDepartamentos() {
         $response = $this->produtoBO->buscarDepartamentos();
         return response()->json($response);
+    }
+
+
+    public function buscarProdutosVenda() {
+        $areasRelacionadas = $this->lojaBO->buscarAreasRelacionadasVenda();
+        $produtos  = $this->produtoBO->buscarProdutosVenda($areasRelacionadas);
+        return response()->json($produtos);
     }
 }

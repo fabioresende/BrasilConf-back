@@ -23,10 +23,12 @@ class LojaBO
     /**
      * LojaBO constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
     }
 
-    public function buscarLoja() {
+    public function buscarLoja()
+    {
         $usuarioLogado = JWTAuth::toUser();
         if ($usuarioLogado->id_tipo_usuario == 1) {
             $loja = Loja::where('id_usuario_adm', $usuarioLogado->id)->first();
@@ -37,7 +39,8 @@ class LojaBO
         return $loja;
     }
 
-    public function buscarAreas() {
+    public function buscarAreas()
+    {
         $areas = Area::all();
         $retorno = array();
         foreach ($areas as $area) {
@@ -47,7 +50,8 @@ class LojaBO
         return $retorno;
     }
 
-    public function buscarAreasRelacionadas($areas) {
+    public function buscarAreasRelacionadas($areas)
+    {
         $usuarioLogado = JWTAuth::toUser();
         if ($usuarioLogado->id_tipo_usuario == 1) {
             $loja = Loja::where('id_usuario_adm', $usuarioLogado->id)->first();
@@ -67,6 +71,26 @@ class LojaBO
         return $retorno;
     }
 
+    public function buscarAreasRelacionadasVenda() {
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->id_tipo_usuario == 1) {
+            print_r("");
+            $loja = Loja::where("id_usuario_adm", $usuarioLogado->id)->first();
+        } else {
+            $loja = Loja::where("id_usuario_adm", $usuarioLogado->id_usuarioadm)->first();
+        }
+        $areas = DB::table('loja_area')
+            ->where("id_loja", "=", $loja->id)
+            ->get();
+        $retorno = array();
+        foreach ($areas as $area) {
+            if($area->id_loja == $loja->id){
+                $retorno[] = $area->id_area;
+            }
+        }
+        return $retorno;
+    }
+
     public function salvar($atributos) {
         $lojaEncontrada = Loja::find($atributos->id);
         if (!$lojaEncontrada) {
@@ -77,7 +101,8 @@ class LojaBO
         return $resposta;
     }
 
-    private function salvarLoja($atributos) {
+    private function salvarLoja($atributos)
+    {
         $loja = new Loja();
         $loja->fill($atributos->all());
         $usuarioLogado = JWTAuth::toUser();
@@ -87,6 +112,7 @@ class LojaBO
             $loja->id_usuario_adm = $usuarioLogado->id_usuarioadm;
         }
         $retorno = $loja->save();
+        $this->salvarAreas($loja, $atributos);
 
         if ($retorno) {
             $resposta['mensagem'] = "Loja salva com sucesso!";
@@ -100,8 +126,10 @@ class LojaBO
     }
 
 
-    public function atualizarLoja($loja, $atributos) {
+    public function atualizarLoja($loja, $atributos)
+    {
         $loja->fill($atributos->all());
+        $this->salvarAreas($atributos);
         $controle = $loja->save();
         if ($controle) {
             $resposta['mensagem'] = "Loja atualizada com sucesso!";
@@ -111,6 +139,16 @@ class LojaBO
             $resposta['mensagem'] = "Erro: Não foi possível atualizar loja!";
             $resposta['success'] = false;
             return $resposta;
+        }
+    }
+
+    private function salvarAreas($atributos)
+    {
+        $lojaArea = DB::table('loja_area');
+        $lojaArea->where('id_loja', $atributos->id)->delete();
+        $lojaEncontrada = Loja::find($atributos->id);
+        foreach ($atributos->areas as $id) {
+            $lojaArea->insert(['id_loja' => $lojaEncontrada->id, 'id_area' => $id]);
         }
     }
 }
