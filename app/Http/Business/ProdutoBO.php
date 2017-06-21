@@ -2,6 +2,7 @@
 namespace App\Http\Business;
 
 use App\Departamento;
+use App\Fornecedor;
 use App\Usuario;
 use App\Produto;
 use Illuminate\Support\Facades\Auth;
@@ -104,12 +105,16 @@ class ProdutoBO {
     }
 
     public function buscarProdutosVenda($areasRelacionadasLoja) {
-        $produtos = DB::table('produtos')
+        $registros = DB::table('produtos')
             ->join('departamentos', 'produtos.id_departamento', '=', 'departamentos.id')
             ->join('areas', 'departamentos.id_area', '=', 'areas.id')
             ->whereIn('areas.id',$areasRelacionadasLoja)
-            ->select("produtos.*","departamentos.id","areas.id","areas.descricao as descricao_area","departamentos.descricao as descricao_departamento")
+            ->select("produtos.*")->where('produtos.status',1)
             ->get();
-        return $produtos;
+        foreach ($registros as $registro){
+            $registro->fornecedor = Fornecedor::where('id',$registro->id_fornecedor)->first();
+            $registro->deparamento = Fornecedor::where('id',$registro->id_departamento)->first();
+        }
+        return $registros;
     }
 }
