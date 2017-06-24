@@ -21,16 +21,15 @@ class Cors
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {
+    public function handle($request, Closure $next) {
         return $next($request)
-            ->header('Access-Control-Allow-Origin', 'http://localhost:3000')
+            //->header('Access-Control-Allow-Origin', 'http://localhost:3000')
             // Depending of your application you can't use '*'
             // Some security CORS concerns
-            //->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'POST, OPTIONS')
             ->header('Access-Control-Allow-Credentials', 'true')
-            ->header('Access-Control-Max-Age', '10000')
-            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+            ->header('Access-Control-Max-Age', '0')
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-Access-Token');
     }
 }

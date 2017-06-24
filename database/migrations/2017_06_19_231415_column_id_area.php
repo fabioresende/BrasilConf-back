@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterTableUsuarios extends Migration
+class ColumnIdArea extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,11 @@ class AlterTableUsuarios extends Migration
      */
     public function up()
     {
-        Schema::table('usuarios',function($table){
-            $table->string('nome','100');
+        Schema::table('departamentos', function (Blueprint $table) {
+            $table->integer('id_area')->unsigned()->default("1");
+            $table->foreign('id_area')
+                ->references('id')
+                ->on('areas');
         });
     }
 
@@ -24,8 +27,6 @@ class AlterTableUsuarios extends Migration
      */
     public function down()
     {
-        Schema::table('usuarios',function($t){
-            $t->dropColumn('nome');
-        });
+        //
     }
 }

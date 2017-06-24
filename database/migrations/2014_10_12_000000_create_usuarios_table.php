@@ -12,15 +12,24 @@ class CreateUsuariosTable extends Migration
      */
     public function up()
     {
+        Schema::create('tipo_usuarios', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('descricao','30')->unique();
+            $table->timestamps();
+        });
+
         Schema::create('usuarios', function (Blueprint $table) {
             $table->increments('id');
             $table->string('usuario','30')->unique();
             $table->string('senha','12');
-            $table->integer('tipo_usuario');
             $table->string('cpf','11')->unique();
-            $table->string('cpf','100');
+            $table->string('nome','50');
             $table->string('telefone','11');
             $table->boolean('status');
+            $table->integer('id_tipo_usuario')->unsigned();
+            $table->foreign('id_tipo_usuario')
+                ->references('id')
+                ->on('tipo_usuarios');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -34,5 +43,6 @@ class CreateUsuariosTable extends Migration
     public function down()
     {
         Schema::drop('users');
+        Schema::drop('tipo_usuario');
     }
 }

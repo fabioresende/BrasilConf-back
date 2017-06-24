@@ -8,12 +8,11 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
-class Usuario extends Model implements AuthenticatableContract, CanResetPasswordContract {
+class Pedido extends Model implements AuthenticatableContract, CanResetPasswordContract {
     use Authenticatable, CanResetPassword;
 
-    protected $fillable = ['usuario','senha','id_tipo_usuario','cpf','telefone','status','nome','id_loja','id_fornecedor','id_usuarioadm','tipo_empresa'];
-    protected $hidden = ['senha'];
-    protected $dates = ['deleted_at'];
+    protected $fillable = ['id','quantidade','valor_total','produto_id','status','loja_id','fornecedor_id'];
+    protected $dates = ['created_at','updated_at'];
 
    public function fornecedor(){
         return $this->hasOne('App\Fornecedor');

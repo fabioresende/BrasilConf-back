@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCompanies1Table extends Migration
+class AddColumUsuarios extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,11 @@ class CreateCompanies1Table extends Migration
      */
     public function up()
     {
-        Schema::create('companies1', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->integer('id_usuarioadm')->unsigned()->nullable();
+            $table->foreign('id_usuarioadm')
+                ->references('id')
+                ->on('usuarios');
         });
     }
 
@@ -25,6 +27,6 @@ class CreateCompanies1Table extends Migration
      */
     public function down()
     {
-        Schema::drop('companies1');
+        //
     }
 }

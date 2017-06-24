@@ -3,18 +3,18 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJobs1Table extends Migration
+class InserindoFornecedorIdUsuarios extends Migration
 {
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('jobs1', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+    public function up() {
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->foreign('id_fornecedor')
+                ->references('id')
+                ->on('fornecedores')->change();
         });
     }
 
@@ -25,6 +25,6 @@ class CreateJobs1Table extends Migration
      */
     public function down()
     {
-        Schema::drop('jobs1');
+        //
     }
 }

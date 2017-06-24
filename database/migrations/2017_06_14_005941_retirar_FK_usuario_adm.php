@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJobs2Table extends Migration
+class RetirarFKUsuarioAdm extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,8 @@ class CreateJobs2Table extends Migration
      */
     public function up()
     {
-        Schema::create('jobs2', function (Blueprint $table) {
-            $table->increments('id');
-            $table->timestamps();
+        Schema::table('usuarios', function (Blueprint $table) {
+            $table->dropForeign('usuarios_id_usuarioadm_foreign');
         });
     }
 
@@ -25,6 +24,6 @@ class CreateJobs2Table extends Migration
      */
     public function down()
     {
-        Schema::drop('jobs2');
+        //
     }
 }
