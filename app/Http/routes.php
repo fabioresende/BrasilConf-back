@@ -48,7 +48,7 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
 
 
     /*
-     * Rotas relacionada aow produtos
+     * Rotas relacionada aos produtos
      */
     Route::get('produtos','ProdutoController@buscarProdutos');
     Route::get('produto/buscar/{idProduto}','ProdutoController@buscarProdutosid');
@@ -56,6 +56,20 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::get('produto/departamentos','ProdutoController@buscarDepartamentos');
     Route::get('produtos/venda','ProdutoController@buscarProdutosVenda');
 
+    /*
+     * Rotas relacionada aos pedidos
+     */
+    Route::post('pedido/salvar','PedidoController@salvarPedido');
+    Route::get('pedidos','PedidoController@buscarPedidos');
+    Route::get('pedido/{idPedido}','PedidoController@buscarPedido');
+    Route::post('pedido/confirmar','PedidoController@confirmarPedido');
+    Route::post('pedido/finalizar','PedidoController@finalizarPedido');
+
+    /*
+     * Rotas relacionada à cep
+     */
+    Route::get('cep/{numCep}','IntegradorController@buscarCep');
+    Route::post('frete','IntegradorController@buscarFrete');
 });
 Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {
     Route::post('auth/login', 'AuthController@authenticate');

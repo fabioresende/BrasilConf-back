@@ -23,13 +23,15 @@ class AuthController extends Controller
         // Validate Company
         if (!$usuario) {
             return response()->json([
-                'error' => 'Usuário ou senha não encontrados'
+                'success' => 'false',
+                'msg' => 'Usuário ou senha não encontrados'
             ], 401);
         }
         // Validate Password
         if ($credenciais['senha'] != $usuario->senha) {
             return response()->json([
-                'error' => 'Usuário ou senha não encontrados'
+                'success' => 'false',
+                'msg' => 'Usuário ou senha não encontrados'
             ], 401);
         }
         // Generate Token
@@ -39,7 +41,8 @@ class AuthController extends Controller
         $expiration = JWTAuth::decode($objectToken->getToken())->get('exp');
         if (!$token) {
             return response()->json([
-                'error' => 'Não foi possivel fazer o login'
+                'success' => false,
+                'msg' => 'Não foi possivel fazer o login'
             ], 500);
         }
         return response()->json([

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Business\FornecedorBO;
 use App\Http\Business\LojaBO;
 use App\Http\Business\ProdutoBO;
 use App\Http\Business\UsuarioBO;
@@ -13,10 +14,11 @@ use Illuminate\Support\Facades\Validator;
 class ProdutoController extends Controller
 {
     private $produtoBO;
-
+    private $fornecedorBO;
     public function __construct() {
-        $this->produtoBO = new produtoBO();
-        $this->usuarioBO = new usuarioBO();
+        $this->produtoBO = new ProdutoBO();
+        $this->usuarioBO = new UsuarioBO();
+        $this->fornecedorBO = new FornecedorBO();
         $this->lojaBO = new lojaBO();
     }
 
@@ -35,7 +37,8 @@ class ProdutoController extends Controller
         return $validator;
     }
     public function buscarProdutos() {
-        $response = $this->produtoBO->buscarTodosProdutos();
+        $fornecedor = $this->fornecedorBO->buscarFornecedor();
+        $response = $this->produtoBO->buscarTodosProdutos($fornecedor->id);
         return response()->json($response);
     }
 

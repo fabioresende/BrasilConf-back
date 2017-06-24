@@ -24,7 +24,7 @@ class FornecedorBO {
     {
     }
 
-    public function buscarForncedor() {
+    public function buscarFornecedor() {
         $usuarioLogado = JWTAuth::toUser();
         if ($usuarioLogado->id_tipo_usuario == 1) {
             $fornecedor = Fornecedor::where('id_usuario_adm', $usuarioLogado->id)->first();
@@ -34,6 +34,7 @@ class FornecedorBO {
 
         return $fornecedor;
     }
+
     public function salvar($atributos) {
         $fornecedorEncontrado = Fornecedor::find($atributos->id);
         if (!$fornecedorEncontrado) {
@@ -50,13 +51,13 @@ class FornecedorBO {
         $retorno = $fornecedor->save();
 
         if ($retorno) {
-            $resposta['mensagem'] = "Fornecedor salvo com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Fornecedor salvo com sucesso!";
+            $resposta['success'] = "Sucesso";
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível salvar fornecedor!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Não foi possível salvar fornecedor!";
+            $resposta['success'] = "Erro";
             return $resposta;
         }
     }
@@ -67,13 +68,13 @@ class FornecedorBO {
         $fornecedor->fill($atributos->all());
         $controle = $fornecedor->save();
         if ($controle) {
-            $resposta['mensagem'] = "Fornecedor atualizado com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Fornecedor atualizado com sucesso!";
+            $resposta['success'] = "Sucesso";
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível atualizar fornecedor!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Não foi possível atualizar fornecedor!";
+            $resposta['success'] = "Erro";
             return $resposta;
         }
     }

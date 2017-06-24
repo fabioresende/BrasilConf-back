@@ -40,7 +40,7 @@ class FornecedorController extends Controller
 
     public function buscarFornecedor()
     {
-        $fornecedor = $this->fornecedorBO->buscarForncedor();
+        $fornecedor = $this->fornecedorBO->buscarFornecedor();
         if (!$fornecedor) {
             return response()->json([
                 'message' => 'Este usuário ainda não possui fornecedor',

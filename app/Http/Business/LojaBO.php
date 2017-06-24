@@ -115,12 +115,12 @@ class LojaBO
         $this->salvarAreas($loja, $atributos);
 
         if ($retorno) {
-            $resposta['mensagem'] = "Loja salva com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Loja salva com sucesso!";
+            $resposta['success'] = "Sucesso";
             return $resposta;
         } else {
-            $resposta['mensagem'] = "Erro: Não foi possível salvar loja!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Não foi possível salvar loja!";
+            $resposta['success'] = "Erro";
             return $resposta;
         }
     }
@@ -132,12 +132,12 @@ class LojaBO
         $this->salvarAreas($atributos);
         $controle = $loja->save();
         if ($controle) {
-            $resposta['mensagem'] = "Loja atualizada com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Loja atualizada com sucesso!";
+            $resposta['success'] = "Sucesso";
             return $resposta;
         } else {
-            $resposta['mensagem'] = "Erro: Não foi possível atualizar loja!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Não foi possível atualizar loja!";
+            $resposta['success'] = "Erro";
             return $resposta;
         }
     }

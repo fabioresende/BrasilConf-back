@@ -38,22 +38,18 @@ class UsuarioBO {
     private function salvarUsuario($usuario,$atributos) {
         $usuario->fill($atributos->all());
         $usuarioLogado = JWTAuth::toUser();
-        if ($usuarioLogado->tipo_empresa == 1) {
-            $usuario->id_loja = $usuarioLogado->id_loja;
-        } elseif ($usuarioLogado->tipo_empresa == 2) {
-            $usuario->id_fornecedor = $usuarioLogado->id_fornecedor;
-        }
-        $usuario->id_usuarioadm = $usuarioLogado->id_usuarioadm;
+        $usuario->id_usuarioadm = $usuarioLogado->id;
+        $usuario->tipo_empresa = $usuarioLogado->tipo_empresa;
         $retorno = $usuario->save();
 
         if ($retorno) {
-            $resposta['mensagem'] = "Usuário salvo com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Usuário salvo com sucesso!";
+            $resposta['success'] = "Sucesso";
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível salvar usuário!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Erro: Não foi possível salvar usuário!";
+            $resposta['success'] = "Erro";
             return $resposta;
         }
     }
@@ -64,13 +60,13 @@ class UsuarioBO {
         $usuario->fill($atributos->all());
         $controle = $usuario->save();
         if ($controle) {
-            $resposta['mensagem'] = "Usuário atualizado com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Usuário atualizado com sucesso!";
+            $resposta['success'] = "Sucesso";
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível atualizar usuário!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Erro: Não foi possível atualizar usuário!";
+            $resposta['success'] = "Erro";
             return $resposta;
         }
     }
@@ -80,8 +76,8 @@ class UsuarioBO {
         $usuarioEncontrado = $usuario->find($idUsuario);
 
         if (!$usuarioEncontrado) {
-            $resposta['mensagem'] = "Usuário não encontrado!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Usuário não encontrado!";
+            $resposta['success'] = "Erro";
             return $resposta;
         } else {
             return $usuarioEncontrado;

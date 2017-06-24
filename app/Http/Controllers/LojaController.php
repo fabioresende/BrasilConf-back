@@ -65,8 +65,8 @@ class LojaController extends Controller {
         $validator = $this->lojaValidator($atributos);
         if ($validator->fails()) {
             return response()->json([
-                'message' => 'Erros de validacao do loja',
-                'erros' => $validator->errors()
+                'msg' => 'Erros de validacao do loja',
+                'success' => $validator->errors()
             ], 422);
         }
         $resposta = $this->lojaBO->salvar($atributos);

@@ -44,13 +44,13 @@ class ProdutoBO {
         $retorno = $produto->save();
 
         if ($retorno) {
-            $resposta['mensagem'] = "Produto salvo com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Produto salvo com sucesso!";
+            $resposta['success'] = 'Sucesso';
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível salvar o produto!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Não foi possível salvar o produto!";
+            $resposta['success'] = 'ERRO';
             return $resposta;
         }
     }
@@ -61,13 +61,13 @@ class ProdutoBO {
         $produto->fill($atributos->all());
         $controle = $produto->save();
         if ($controle) {
-            $resposta['mensagem'] = "Produto atualizado com sucesso!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Produto atualizado com sucesso!";
+            $resposta['success'] = 'Sucesso';
             return $resposta;
         }
         else {
-            $resposta['mensagem'] = "Erro: Não foi possível atualizar produto!";
-            $resposta['success'] = false;
+            $resposta['msg'] = "Erro: Não foi possível atualizar produto!";
+            $resposta['success'] = 'Erro';
             return $resposta;
         }
     }
@@ -77,8 +77,8 @@ class ProdutoBO {
         $produtoEncontrado = $produto::with(["departamento","fornecedor"])->find($idProduto);
 
         if (!$produtoEncontrado) {
-            $resposta['mensagem'] = "Usuário não encontrado!";
-            $resposta['success'] = true;
+            $resposta['msg'] = "Usuário não encontrado!";
+            $resposta['success'] = 'Erro';
             return $resposta;
         } else {
             return $produtoEncontrado;
@@ -86,17 +86,9 @@ class ProdutoBO {
 
     }
 
-    public function buscarTodosProdutos() {
-        $usuarioLogado = JWTAuth::toUser();
-        if ($usuarioLogado->tipo_empresa == 1) {
-            $idFornecedor = $usuarioLogado->id_fornecedor;
-            $produtosVinculados = Produto::with("departamento")->where('id_fornecedor',$idFornecedor)->get();
-            return $produtosVinculados;
-        } else {
-            $idLoja = $usuarioLogado->id_loja;
-            $produtosVinculados = Produto::with("departamento")->where('id_loja',$idLoja)->get();
-            return $produtosVinculados;
-        }
+    public function buscarTodosProdutos($idFornecedor) {
+        $produtosVinculados = Produto::with("departamento")->where('id_fornecedor',$idFornecedor)->get();
+        return $produtosVinculados;
     }
 
     public function buscarDepartamentos() {
@@ -116,5 +108,11 @@ class ProdutoBO {
             $registro->deparamento = Fornecedor::where('id',$registro->id_departamento)->first();
         }
         return $registros;
+    }
+
+    public function buscarFornecedorProduto($idProduto) {
+        $produto = Produto::find($idProduto);
+        $fornecedor = Fornecedor::find($produto->id_fornecedor);
+        return $fornecedor;
     }
 }
