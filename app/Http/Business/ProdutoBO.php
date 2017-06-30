@@ -41,35 +41,34 @@ class ProdutoBO {
 
     private function salvarProduto($produto,$atributos) {
         $produto->fill($atributos->all());
-        $retorno = $produto->save();
-
-        if ($retorno) {
-            $resposta['msg'] = "Produto salvo com sucesso!";
-            $resposta['success'] = 'Sucesso';
-            return $resposta;
-        }
-        else {
+        try{
+            $retorno = $produto->save();
+        } catch (\PDOException $e) {
             $resposta['msg'] = "Não foi possível salvar o produto!";
             $resposta['success'] = 'ERRO';
             return $resposta;
         }
+
+            $resposta['msg'] = "Produto salvo com sucesso!";
+            $resposta['success'] = 'Sucesso';
+            return $resposta;
+        
     }
 
 
 
     public function atualizarProduto($produto,$atributos) {
         $produto->fill($atributos->all());
-        $controle = $produto->save();
-        if ($controle) {
-            $resposta['msg'] = "Produto atualizado com sucesso!";
-            $resposta['success'] = 'Sucesso';
-            return $resposta;
-        }
-        else {
+        try{ 
+            $controle = $produto->save();
+        }catch (\PDOException $e) {
             $resposta['msg'] = "Erro: Não foi possível atualizar produto!";
             $resposta['success'] = 'Erro';
             return $resposta;
-        }
+        }    
+            $resposta['msg'] = "Produto atualizado com sucesso!";
+            $resposta['success'] = 'Sucesso';
+            return $resposta;
     }
 
     public function buscarProduto($idProduto){

@@ -40,35 +40,32 @@ class UsuarioBO {
         $usuarioLogado = JWTAuth::toUser();
         $usuario->id_usuarioadm = $usuarioLogado->id;
         $usuario->tipo_empresa = $usuarioLogado->tipo_empresa;
-        $retorno = $usuario->save();
-
-        if ($retorno) {
-            $resposta['msg'] = "Usuário salvo com sucesso!";
-            $resposta['success'] = "Sucesso";
-            return $resposta;
-        }
-        else {
+        try{
+            $retorno = $usuario->save();
+        } catch (\PDOException $e) {
             $resposta['msg'] = "Erro: Não foi possível salvar usuário!";
             $resposta['success'] = "Erro";
             return $resposta;
         }
+
+            $resposta['msg'] = "Usuário salvo com sucesso!";
+            $resposta['success'] = "Sucesso";
+            return $resposta;
     }
 
 
 
     public function atualizarUsuario($usuario,$atributos) {
         $usuario->fill($atributos->all());
-        $controle = $usuario->save();
-        if ($controle) {
+        try {
+            $controle = $usuario->save();
+        } catch (\PDOException $e) {
+            $resposta['msg'] = "Erro: Não foi possível salvar usuário!";
+            $resposta['success'] = "Erro";
+        }
             $resposta['msg'] = "Usuário atualizado com sucesso!";
             $resposta['success'] = "Sucesso";
             return $resposta;
-        }
-        else {
-            $resposta['msg'] = "Erro: Não foi possível atualizar usuário!";
-            $resposta['success'] = "Erro";
-            return $resposta;
-        }
     }
 
     public function buscarUsuario($idUsuario){
