@@ -47,7 +47,12 @@ class FornecedorBO {
     private function salvarFornecedor($atributos) {
         $fornecedor = new Fornecedor();
         $fornecedor->fill($atributos->all());
-        $fornecedor->id_usuarioadm = JWTAuth::toUser()->id_usuarioadm;
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->id_tipo_usuario == 1) {
+            $fornecedor->id_usuario_adm = JWTAuth::toUser()->id;
+        } else {
+            $fornecedor->id_usuario_adm = JWTAuth::toUser()->id_usuarioadm;
+        }
         $retorno = $fornecedor->save();
 
         if ($retorno) {
