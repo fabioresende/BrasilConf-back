@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://api.brasconf.dev'),
+    'url' => env('APP_URL', 'http://stoked-proxy-171716.appspot.com'),
 
     /*
     |--------------------------------------------------------------------------
@@ -91,7 +91,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY', 'base64:fgPyLXS86X/LtsV/oQd56IAlKdcaanp3EbbyrjABK34'),
 
     'cipher' => 'AES-256-CBC',
 

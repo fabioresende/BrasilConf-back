@@ -19,6 +19,7 @@ class AuthController extends Controller
         // Get only email and password from request
         $credenciais = $request->only('usuario', 'senha');
         // Get user by email
+        print_r("é aqiu ");die;
         $usuario = Usuario::where('usuario', $credenciais['usuario'])->first();
         // Validate Company
         if (!$usuario) {

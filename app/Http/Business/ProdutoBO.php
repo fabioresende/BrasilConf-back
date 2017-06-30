@@ -26,10 +26,11 @@ class ProdutoBO {
     {
     }
 
-    public function salvar($atributos) {
+    public function salvar($atributos,$fornecedor) {
         $produto = new Produto();
         $produtoEncontrado = $produto->find($atributos->id);
         if (!$produtoEncontrado) {
+            $produto->id_fornecedor = $fornecedor->id;
             $resposta = $this->salvarProduto($produto,$atributos);
         }
         else {
@@ -40,7 +41,6 @@ class ProdutoBO {
 
     private function salvarProduto($produto,$atributos) {
         $produto->fill($atributos->all());
-        $produto->id_fornecedor = JWTAuth::toUser()->id_fornecedor;
         $retorno = $produto->save();
 
         if ($retorno) {

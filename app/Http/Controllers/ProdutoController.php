@@ -60,7 +60,8 @@ class ProdutoController extends Controller
                 'erros'        => $validator->errors()
             ], 422);
         }
-        $response = $this->produtoBO->salvar($atributos);
+        $fornecedor = $this->fornecedorBO->buscarFornecedor();
+        $response = $this->produtoBO->salvar($atributos,$fornecedor);
         return response()->json($response,200);
     }
 
