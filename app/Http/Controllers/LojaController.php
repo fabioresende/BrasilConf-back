@@ -34,7 +34,8 @@ class LojaController extends Controller {
             'numero' => 'required',
             'url_logo' => 'required',
             'estado' => 'required',
-            'cidade' => 'required'
+            'cidade' => 'required',
+            'areas' => 'required'
         ]);
         return $validator;
     }

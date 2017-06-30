@@ -74,7 +74,6 @@ class LojaBO
     public function buscarAreasRelacionadasVenda() {
         $usuarioLogado = JWTAuth::toUser();
         if ($usuarioLogado->id_tipo_usuario == 1) {
-            print_r("");
             $loja = Loja::where("id_usuario_adm", $usuarioLogado->id)->first();
         } else {
             $loja = Loja::where("id_usuario_adm", $usuarioLogado->id_usuarioadm)->first();
@@ -111,35 +110,35 @@ class LojaBO
         } else {
             $loja->id_usuario_adm = $usuarioLogado->id_usuarioadm;
         }
-        $retorno = $loja->save();
-        $this->salvarAreas($loja, $atributos);
+        try{
+            $retorno = $loja->save();
+            $this->salvarAreas($loja, $atributos);
+        } catch (\PDOException $e) {
+           $resposta['msg'] = "Não foi possível salvar loja!";
+           $resposta['success'] = "Erro";
+           return $resposta;
+        }    
 
-        if ($retorno) {
             $resposta['msg'] = "Loja salva com sucesso!";
             $resposta['success'] = "Sucesso";
             return $resposta;
-        } else {
-            $resposta['msg'] = "Não foi possível salvar loja!";
-            $resposta['success'] = "Erro";
-            return $resposta;
-        }
     }
 
 
     public function atualizarLoja($loja, $atributos)
     {
         $loja->fill($atributos->all());
-        $this->salvarAreas($atributos);
-        $controle = $loja->save();
-        if ($controle) {
-            $resposta['msg'] = "Loja atualizada com sucesso!";
-            $resposta['success'] = "Sucesso";
-            return $resposta;
-        } else {
+        try{
+            $controle = $loja->save();            
+            $this->salvarAreas($atributos);
+        } catch (\PDOException $e) {
             $resposta['msg'] = "Não foi possível atualizar loja!";
             $resposta['success'] = "Erro";
             return $resposta;
         }
+            $resposta['msg'] = "Loja atualizada com sucesso!";
+            $resposta['success'] = "Sucesso";
+            return $resposta;
     }
 
     private function salvarAreas($atributos)
