@@ -93,7 +93,45 @@ class PedidoController extends Controller
                 'success'        => true
             ], 422);
         }
-        $retorno = $this->pedidoBO->finalizarPedido($atributos->id_pedido,$loja);
+        $retorno = $this->pedidoBO->finalizarPedido($atributos,$loja);
         return response()->json($retorno,200);
+    }
+
+    public function getPedidosPendentes() {
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->tipo_empresa == 2) {
+            $loja = $this->lojaBO->buscarLoja();
+            $pedidos = $this->pedidoBO->getPedidosPendentesLoja($loja);
+        } elseif ($usuarioLogado->tipo_empresa == 1) {
+            $fornecedor = $this->fornecedorBO->buscarFornecedor();
+            $pedidos = $this->pedidoBO->getPedidosPendentesFornecedor($fornecedor);
+        }
+        if($pedidos == false){
+            return response()->json([
+                'msg'   => 'Seu usuário ainda não possui pedidos pendentes',
+                'success'        => true
+            ], 200);
+        } else {
+            return response()->json($pedidos,200);
+        }
+    }
+
+    public function getNumPedidosConcluidosPorMes() {
+        $usuarioLogado = JWTAuth::toUser();
+        if ($usuarioLogado->tipo_empresa == 2) {
+            $loja = $this->lojaBO->buscarLoja();
+            $pedidos = $this->pedidoBO->getPedidosConcluidosLoja($loja);
+        } elseif ($usuarioLogado->tipo_empresa == 1) {
+            $fornecedor = $this->fornecedorBO->buscarFornecedor();
+            $pedidos = $this->pedidoBO->getPedidosConcluidosFornecedor($fornecedor);
+        }
+        if($pedidos == false){
+            return response()->json([
+                'msg'   => 'Seu usuário ainda não possui pedidos pendentes',
+                'success'        => true
+            ], 200);
+        } else {
+            return response()->json($pedidos,200);
+        }
     }
 }

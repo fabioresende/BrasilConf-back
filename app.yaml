@@ -13,3 +13,16 @@ env_variables:
   APP_LOG: errorlog
   APP_KEY: base64:fgPyLXS86X/LtsV/oQd56IAlKdcaanp3EbbyrjABK34
   STORAGE_DIR: /tmp
+  CACHE_DRIVER: database
+  SESSION_DRIVER: database
+  ## Set these environment variables according to your CloudSQL configuration.
+  DB_HOST: 35.192.23.234
+  DB_DATABASE: b2brasil_db
+  DB_USERNAME: root
+  DB_PASSWORD: 66202272A
+  DB_SOCKET: "/cloudsql/stoked-proxy-171716:us-central1:servidor-mysql"
+
+beta_settings:
+  # for Cloud SQL, set this value to the Cloud SQL connection name,
+  # e.g. "project:region:cloudsql-instance"
+  cloud_sql_instances: "stoked-proxy-171716:us-central1:servidor-mysql"

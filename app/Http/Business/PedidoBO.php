@@ -5,6 +5,7 @@ use App\Departamento;
 use App\Fornecedor;
 use App\Loja;
 use App\Pedido;
+use App\Score;
 use App\Usuario;
 use App\Produto;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,6 @@ class PedidoBO {
     private function salvarPedido($pedido,$atributos) {
         $pedido->fill($atributos->all());
         $retorno = $pedido->save();
-
         if ($retorno) {
             $resposta['msg'] = "Pedido salvo com sucesso!";
             $resposta['success'] = "Sucesso";
@@ -131,9 +131,16 @@ class PedidoBO {
             $pedido = Pedido::find($atributos->id);
             if ($pedido->status == 'CONFIRMADO') {
                 $pedido->status = 'FINALIZADO';
-                $pedido->save();
-                $resposta['msg'] = "Pedido finalizado com sucesso!";
+                $produto = Produto::find($atributos->produto_id);
+                $produto->quantidade = $produto->quantidade - $atributos->quantidade;
+                $score = DB::transaction(function() use ($pedido,$produto,$atributos) {
+                    $pedido->save();
+                    $produto->save();
+                    return $this->salvarScore($atributos);
+                });
+                $resposta['msg'] = "Pedido finalizado com sucesso foi ao seu score $score pontos!";
                 $resposta['success'] = "Sucesso";
+                return $resposta;
             } else {
                 $resposta['msg'] = "Pedido se encontra em status para ser finalizado!";
                 $resposta['success'] = "Erro";
@@ -144,5 +151,75 @@ class PedidoBO {
             $resposta['success'] = "Erro";
             return $resposta;
         }
+    }
+
+    public function salvarScore($atributos){
+        $pontos = intVal($atributos->valor_total);
+        $score = new Score();
+        $fornecedor = Fornecedor::find($atributos->fornecedor_id);
+        $scoreFornecedor = $fornecedor->score;
+        $score->pontos = $scoreFornecedor + $pontos;
+        $score->id_empresa = $atributos->fornecedor_id;
+        $score->tipo_empresa = 1;
+        $score->save();
+        $fornecedor->score = $scoreFornecedor + $pontos;
+        $fornecedor->save();
+
+        $loja = Loja::find($atributos->loja_id);
+        $scoreLoja = $loja->score;
+        $score->pontos = $scoreLoja + $pontos;
+        $score->id_empresa = $atributos->loja_id;
+        $score->tipo_empresa = 2;
+        $score->save();
+        $loja->score = $scoreLoja + $pontos;
+        $loja->save();
+        return $pontos;
+    }
+
+    public function getPedidosPendentesLoja($loja) {
+        $pedidos = Pedido::where("loja_id",$loja->id)->where("status","!=","FINALIZADO")->get();
+        if(!$pedidos){
+            return false;
+        }
+        foreach ($pedidos as $pedido) {
+            $idProduto = $pedido->produto_id;
+            $pedido->produto = Produto::where("id",$idProduto)->first();
+        }
+        return $pedidos;
+    }
+    public function getPedidosPendentesFornecedor($fornecedor) {
+        $pedidos = Pedido::where("fornecedor_id",$fornecedor->id)->where("status","!=","FINALIZADO")->get();
+        if (!$pedidos) {
+            return false;
+        }
+        foreach ($pedidos as $pedido) {
+            $idProduto = $pedido->produto_id;
+            $pedido->produto = Produto::where("id",$idProduto)->first();
+        }
+        return $pedidos;
+    }
+
+    public function getPedidosConcluidosLoja($loja) {
+        $retorno = null;
+        for ($i = 1;$i<=12;$i++) {
+            $pedidosMes = Pedido::where('loja_id',$loja->id)
+                ->where('status','FINALIZADO')
+                ->whereMonth('updated_at', '=', $i)
+                ->get();
+            $retorno[$i] = count($pedidosMes);
+        }
+        return $retorno;
+    }
+
+    public function getPedidosConcluidosFornecedor($fornecedor) {
+        $retorno = null;
+        for ($i = 1;$i<=12;$i++) {
+            $pediosMes = Pedido::where('fornecedor_id',$fornecedor->id)
+                ->where('status','FINALIZADO')
+                ->whereMonth('updated_at', '=', $i)
+                ->get();
+            $retorno[$i] = count($pediosMes);
+        }
+        return $retorno;
     }
 }

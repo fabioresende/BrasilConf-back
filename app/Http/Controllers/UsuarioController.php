@@ -66,4 +66,12 @@ class UsuarioController extends Controller
         $response = $this->usuarioBO->buscarTiposUsuario();
         return response()->json($response, 200);
     }
+
+    public function buscarQtdUsuarios() {
+        $usuarioAdm = $this->usuarioBO->buscarUsuarioAdm();
+        $usuarios = $this->usuarioBO->buscarTodosUsuarios($usuarioAdm->id);
+        $qtdUsuarios = count($usuarios);
+
+        return response()->json($qtdUsuarios,200);
+    }
 }

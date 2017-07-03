@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterNameColumnFornecedors extends Migration
+class CollumnPontuacaoFornecedorsLoja extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,11 @@ class AlterNameColumnFornecedors extends Migration
      */
     public function up()
     {
-        Schema::table('fornecedors', function($table)
-        {
-            $table->renameColumn('id_usuario_adm', 'id_usuarioadm');
+        Schema::table('fornecedors', function (Blueprint $table) {
+            $table->integer('score');
+        });
+        Schema::table('lojas', function (Blueprint $table) {
+            $table->integer('score');
         });
     }
 

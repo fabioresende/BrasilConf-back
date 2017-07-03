@@ -29,6 +29,7 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::get('usuarios','UsuarioController@buscarUsuarios');
     Route::get('usuario/buscar/{idUsuario}','UsuarioController@buscarUsuariosId');
     Route::get('usuario/tipo-usuarios','UsuarioController@buscarTiposUsuario');
+    Route::get('usuario/qtd-usuarios','UsuarioController@buscarQtdUsuarios');
     Route::post('usuario/salvar','UsuarioController@salvarUsuario');
 
 
@@ -55,6 +56,7 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::post('produto/salvar','ProdutoController@salvarProduto');
     Route::get('produto/departamentos','ProdutoController@buscarDepartamentos');
     Route::get('produtos/venda','ProdutoController@buscarProdutosVenda');
+    Route::get('produtos-mes','ProdutoController@getProdutosCadastradosPorMes');
 
     /*
      * Rotas relacionada aos pedidos
@@ -64,12 +66,18 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
     Route::get('pedido/{idPedido}','PedidoController@buscarPedido');
     Route::post('pedido/confirmar','PedidoController@confirmarPedido');
     Route::post('pedido/finalizar','PedidoController@finalizarPedido');
+    Route::get('pedido-pendentes','PedidoController@getPedidosPendentes');
+    Route::get('pedido-concluidos','PedidoController@getNumPedidosConcluidosPorMes');
 
     /*
      * Rotas relacionada à cep
      */
     Route::get('cep/{numCep}','IntegradorController@buscarCep');
     Route::post('frete','IntegradorController@buscarFrete');
+
+    Route::get('ranking','RankingController@rankear');
+    Route::get('ranking/estabelecimento','RankingController@estabelecimento');
+    Route::get('ranking/historico-score','RankingController@historicoScore');
 });
 Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {
     Route::post('auth/login', 'AuthController@authenticate');
