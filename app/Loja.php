@@ -20,7 +20,8 @@ class Loja extends Model {
         'estado',
         'url_logo',
         'id_usuario_adm',
-        'url_site'];
+        'url_site',
+        'score'];
     protected $dates = ['deleted_at'];
     
     public function usuarioAdministrador() {

@@ -76,4 +76,12 @@ class ProdutoController extends Controller
         $produtos  = $this->produtoBO->buscarProdutosVenda($areasRelacionadas);
         return response()->json($produtos);
     }
+
+    public function getProdutosCadastradosPorMes() {
+        $fornecedor = $this->fornecedorBO->buscarFornecedor();
+        $produtos  = $this->produtoBO->buscarProdutosMes($fornecedor);
+        return response()->json($produtos);
+    }
+
+
 }

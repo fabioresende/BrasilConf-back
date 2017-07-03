@@ -114,4 +114,16 @@ class ProdutoBO {
         $fornecedor = Fornecedor::find($produto->id_fornecedor);
         return $fornecedor;
     }
+
+    public function buscarProdutosMes($fornecedor) {
+        $retorno = null;
+        for ($i = 1;$i<=12;$i++) {
+            $produtosMes = Produto::where('id_fornecedor',$fornecedor->id)
+                ->where('quantidade','>',0)
+                ->whereMonth('created_at', '=', $i)
+                ->get();
+            $retorno[$i] = count($produtosMes);
+        }
+        return $retorno;
+    }
 }
