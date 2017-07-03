@@ -77,7 +77,7 @@ Route::group(array('prefix' => 'api','middleware'=> ['cors','jwt.auth']), functi
 
     Route::get('ranking','RankingController@rankear');
     Route::get('ranking/estabelecimento','RankingController@estabelecimento');
-    Route::get('ranking/historico-score','RankingController@historicoScore');
+    Route::get('ranking/historico','RankingController@graficos');
 });
 Route::group(array('prefix' => 'api','middleware'=> 'cors'), function() {
     Route::post('auth/login', 'AuthController@authenticate');

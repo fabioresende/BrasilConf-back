@@ -130,11 +130,15 @@ class RankingBO
             $tipoEmpresa = 2;
         }
         for ($i = 1;$i<=12;$i++) {
-            $scoreMes = Score::where('id_empresa',$empresa->id)
+            $scoresMes = Score::where('id_empresa',$empresa->id)
                 ->where('tipo_empresa',$tipoEmpresa)
                 ->whereMonth('created_at', '=', $i)
                 ->get();
-            $retorno[$i] = count($scoreMes);
+            $soma = 0;
+            foreach ($scoresMes as $scoreMes){
+                $soma = $scoreMes->pontos;
+            }
+            $retorno[] = $soma;
         }
         return $retorno;
     }

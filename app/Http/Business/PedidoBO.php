@@ -165,6 +165,7 @@ class PedidoBO {
         $fornecedor->score = $scoreFornecedor + $pontos;
         $fornecedor->save();
 
+        $score = new Score();
         $loja = Loja::find($atributos->loja_id);
         $scoreLoja = $loja->score;
         $score->pontos = $scoreLoja + $pontos;
@@ -206,7 +207,7 @@ class PedidoBO {
                 ->where('status','FINALIZADO')
                 ->whereMonth('updated_at', '=', $i)
                 ->get();
-            $retorno[$i] = count($pedidosMes);
+            $retorno[] = count($pedidosMes);
         }
         return $retorno;
     }
@@ -218,7 +219,7 @@ class PedidoBO {
                 ->where('status','FINALIZADO')
                 ->whereMonth('updated_at', '=', $i)
                 ->get();
-            $retorno[$i] = count($pediosMes);
+            $retorno[] = count($pediosMes);
         }
         return $retorno;
     }
