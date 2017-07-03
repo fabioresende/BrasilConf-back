@@ -122,7 +122,7 @@ class ProdutoBO {
                 ->where('quantidade','>',0)
                 ->whereMonth('created_at', '=', $i)
                 ->get();
-            $retorno[$i] = count($produtosMes);
+            $retorno[] = count($produtosMes);
         }
         return $retorno;
     }
