@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Fornecedor;
 use App\Http\Requests\AutenticateRequest;
+use App\Loja;
 use App\Usuario;
 use Illuminate\Http\Request;
 
@@ -22,21 +23,24 @@ class AuthController extends Controller
         // Get user by email
         $confirm = 0;
         $usuario = Usuario::where('usuario', $credenciais['usuario'])->first();
-        if ($usuario->id_usuarioadm ) {
-            if ($usuario->tipo_empresa == 1) {
-                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id_usuarioadm)->first();
-            } else {
-                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id_usuarioadm)->first();
-            }
-        } else{
-            if ($usuario->tipo_empresa == 1) {
-                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id)->first();
-            } else {
-                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id)->first();
+        $empresa = null;
+        if ($usuario) {
+            if ($usuario->id_usuarioadm) {
+                if ($usuario->tipo_empresa == 1) {
+                    $empresa = Fornecedor::where('id_usuario_adm',$usuario->id_usuarioadm)->first();
+                } else {
+                    $empresa = Loja::where('id_usuario_adm',$usuario->id_usuarioadm)->first();
+                }
+            } else{
+                if ($usuario->tipo_empresa == 1) {
+                    $empresa = Fornecedor::where('id_usuario_adm',$usuario->id)->first();
+                } else {
+                    $empresa = Loja::where('id_usuario_adm',$usuario->id)->first();
+                }
             }
         }
         if ($empresa) {
-            $confirm = $usuario->tipo_empresa;
+            $confirm = 1;
         }
         // Validate Company
         if (!$usuario) {
@@ -68,6 +72,7 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => $expiration,
             'estabelecimento' => $confirm,
+            'tipo_estabelecimento' => $usuario->tipo_empresa,
             'nome_usuario' => $usuario->usuario,
         ]);
     }
