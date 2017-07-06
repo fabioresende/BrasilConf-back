@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Fornecedor;
 use App\Http\Requests\AutenticateRequest;
 use App\Usuario;
 use Illuminate\Http\Request;
@@ -19,7 +20,24 @@ class AuthController extends Controller
         // Get only email and password from request
         $credenciais = $request->only('usuario', 'senha');
         // Get user by email
+        $confirm = 0;
         $usuario = Usuario::where('usuario', $credenciais['usuario'])->first();
+        if ($usuario->id_usuarioadm ) {
+            if ($usuario->tipo_empresa == 1) {
+                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id_usuarioadm)->first();
+            } else {
+                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id_usuarioadm)->first();
+            }
+        } else{
+            if ($usuario->tipo_empresa == 1) {
+                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id)->first();
+            } else {
+                $empresa = Fornecedor::where('id_usuario_adm',$usuario->id)->first();
+            }
+        }
+        if ($empresa) {
+            $confirm = $usuario->tipo_empresa;
+        }
         // Validate Company
         if (!$usuario) {
             return response()->json([
@@ -48,7 +66,9 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => $expiration
+            'expires_in' => $expiration,
+            'estabelecimento' => $confirm,
+            'nome_usuario' => $usuario->usuario,
         ]);
     }
 

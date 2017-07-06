@@ -52,8 +52,8 @@ class RankingController extends Controller
         $retorno = null;
         if ($usuarioLogado->tipo_empresa == 2) {
             $loja = $this->lojaBO->buscarLoja();
-            $retorno->pedidos = $this->pedidoBO->getPedidosConcluidosLoja($loja);
-            $retorno->score = $this->rankingBO->historicoScore();
+            $retorno['pedidos'] = $this->pedidoBO->getPedidosConcluidosLoja($loja);
+            $retorno['score'] = $this->rankingBO->historicoScore();
         } elseif ($usuarioLogado->tipo_empresa == 1) {
             $fornecedor = $this->fornecedorBO->buscarFornecedor();
             $retorno['pedidos'] = $this->pedidoBO->getPedidosConcluidosFornecedor($fornecedor);
