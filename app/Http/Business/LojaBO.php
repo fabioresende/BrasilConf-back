@@ -116,6 +116,7 @@ class LojaBO
         } catch (\PDOException $e) {
            $resposta['msg'] = "Não foi possível salvar loja!";
            $resposta['success'] = "Erro";
+           $resposta['detlhes_erro'] = $e;
            return $resposta;
         }    
 
@@ -130,7 +131,7 @@ class LojaBO
         $loja->fill($atributos->all());
         try{
             $controle = $loja->save();            
-            $this->salvarAreas($atributos);
+            $this->salvarAreas($loja,$atributos);
         } catch (\PDOException $e) {
             $resposta['msg'] = "Não foi possível atualizar loja!";
             $resposta['success'] = "Erro";
@@ -141,13 +142,12 @@ class LojaBO
             return $resposta;
     }
 
-    private function salvarAreas($atributos)
+    private function salvarAreas($loja,$atributos)
     {
         $lojaArea = DB::table('loja_area');
         $lojaArea->where('id_loja', $atributos->id)->delete();
-        $lojaEncontrada = Loja::find($atributos->id);
         foreach ($atributos->areas as $id) {
-            $lojaArea->insert(['id_loja' => $lojaEncontrada->id, 'id_area' => $id]);
+            $lojaArea->insert(['id_loja' => $loja->id, 'id_area' => $id]);
         }
     }
 }
